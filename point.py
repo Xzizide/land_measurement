@@ -1,35 +1,51 @@
 class Point:
-    def __init__(
-        self,
-        x: float = 0,
-        y: float = 0,
-        z: float = 0,
-        w: float = 0,
-        more_dimensions: list[float] = None,
-    ):
-        self.coordinates = {"x": x, "y": y, "z": z, "w": w}
-        if more_dimensions:
-            index = 5
-            for coordinate in more_dimensions:
-                self.coordinates[str(index)] = coordinate
-                index += 1
+    def __init__(self, dimensions: list[float] = None):
+        self.coordinates = []
 
-    def distance_from(self, obj: "Point") -> float:
+        if dimensions:
+            for coordinate in dimensions:
+                self.coordinates.append(coordinate)
+
+        dimension_diff = 4 - len(self.coordinates)
+
+        if dimension_diff > 0:
+            for index in range(dimension_diff):
+                self.coordinates.append(0)
+
+        self.x = self.coordinates[0]
+        self.y = self.coordinates[1]
+        self.z = self.coordinates[2]
+        self.w = self.coordinates[3]
+
+    def equal_amount_coords(self, other: "Point") -> tuple[list[float], list[float]]:
+        self_coords_copy = self.coordinates[:]
+        other_coords_copy = other.coordinates[:]
+        difference = len(self_coords_copy) - len(other_coords_copy)
+
+        if difference > 0:
+            for index in range(difference):
+                other_coords_copy.append(0)
+        else:
+            for index in range(abs(difference)):
+                self_coords_copy.append(0)
+
+        return self_coords_copy, other_coords_copy
+
+    def distance_from(self, other: "Point") -> float:
         distance = 0
 
-        if len(self.coordinates) > len(obj.coordinates):
-            more_valued_dimensions = self.coordinates
-        else:
-            more_valued_dimensions = obj.coordinates
+        self_coords, other_coords = self.equal_amount_coords(other)
 
-        for coordinate in more_valued_dimensions:
-            temp_self_coord = 0
-            temp_obj_coord = 0
-            if coordinate in self.coordinates:
-                temp_self_coord = self.coordinates[coordinate]
-            if coordinate in obj.coordinates:
-                temp_obj_coord = obj.coordinates[coordinate]
-
-            distance += (temp_obj_coord - temp_self_coord) ** 2
+        for index, coordinate in enumerate(self_coords):
+            distance += (other_coords[index] - coordinate) ** 2
 
         return distance ** (1 / 2)
+
+    def __add__(self, other) -> "Point":
+        self_coords, other_coords = self.equal_amount_coords(other)
+        added_coords = []
+
+        for index, coordinate in enumerate(self_coords):
+            added_coords.append(coordinate + other_coords[index])
+
+        return Point(dimensions=added_coords[:])
