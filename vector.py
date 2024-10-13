@@ -1,3 +1,4 @@
+import geometry
 import point
 
 
@@ -15,3 +16,8 @@ class Vector:
 
     def magnitude(self) -> float:
         return self.initial_point.distance_from(self.terminal_point)
+
+    def __add__(self, other) -> "Vector":
+        self_direction, other_direction = geometry.equal_amount_list(
+            list_1=self.direction, list_2=other.direction
+        )
