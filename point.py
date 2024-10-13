@@ -5,17 +5,8 @@ class Point:
         if dimensions:
             for coordinate in dimensions:
                 self.coordinates.append(coordinate)
-
-        dimension_diff = 4 - len(self.coordinates)
-
-        if dimension_diff > 0:
-            for index in range(dimension_diff):
-                self.coordinates.append(0)
-
-        self.x = self.coordinates[0]
-        self.y = self.coordinates[1]
-        self.z = self.coordinates[2]
-        self.w = self.coordinates[3]
+        else:
+            self.coordinates.append(0)
 
     def equal_amount_coords(self, other: "Point") -> tuple[list[float], list[float]]:
         self_coords_copy = self.coordinates[:]
