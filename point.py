@@ -40,3 +40,34 @@ class Point:
             added_coords.append(coordinate + other_coords[index])
 
         return Point(dimensions=added_coords[:])
+
+    def __sub__(self, other) -> "Point":
+        return self + (other * -1)
+
+    def __mul__(self, other) -> "Point":
+        if type(other) is Point:
+            total = 0
+            self_coords, other_coords = geometry.equal_amount_list(
+                list_1=self.coordinates, list_2=other.coordinates
+            )
+            for index, coord in enumerate(self_coords):
+                total += coord + other_coords[index]
+            return total
+
+        multiplied_coords = []
+
+        for coord in self.coordinates:
+            multiplied_coords.append(coord * other)
+
+        return Point(dimensions=multiplied_coords[:])
+
+    def __truediv__(self, other) -> "Point":
+        if type(other) is Point or other == 0:
+            raise
+
+        divided_coords = []
+
+        for coord in self.coordinates:
+            divided_coords.append(coord / other)
+
+        return Point(dimensions=divided_coords[:])
